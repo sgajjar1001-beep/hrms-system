@@ -1,0 +1,30 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Employees</title>
+</head>
+<body>
+    <h2>Add Employee</h2>
+    <form id="empForm">
+        <input type="text" id="name" placeholder="Name" required><br><br>
+        <input type="email" id="email" placeholder="Email"><br><br>
+        <button type="submit">Save</button>
+    </form>
+
+<script>
+document.getElementById('empForm').addEventListener('submit', async (e)=>{
+    e.preventDefault();
+    await fetch('/api/employees', {
+        method:'POST',
+        headers:{'Content-Type':'application/json'},
+        body:JSON.stringify({
+            name: name.value,
+            email: email.value
+        })
+    });
+    alert("Employee Added");
+});
+</script>
+</body>
+</html>
