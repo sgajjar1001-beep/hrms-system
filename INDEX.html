@@ -1,0 +1,495 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+<meta charset="UTF-8">
+
+<meta name="viewport"
+content="width=device-width, initial-scale=1.0">
+
+<title>Factory ERP</title>
+
+<link rel="stylesheet"
+href="style.css">
+
+</head>
+
+<body>
+
+<header>
+
+<h1>Factory ERP</h1>
+
+<p id="datetime"></p>
+
+<button
+class="settings-btn"
+onclick="openSettings()">
+
+⚙
+
+</button>
+
+</header>
+
+<div class="container">
+
+<!-- DASHBOARD -->
+
+<div id="dashboardTab"
+class="card">
+
+<div class="topbar">
+
+<h2>Workers</h2>
+
+<button
+class="btn"
+onclick="openWorkerModal()">
+
++ Add Worker
+
+</button>
+
+</div>
+
+<div class="table-wrapper">
+
+<table>
+
+<thead>
+
+<tr>
+
+<th>ID</th>
+<th>Name</th>
+<th>Gender</th>
+<th>DOJ</th>
+<th>DOB</th>
+
+</tr>
+
+</thead>
+
+<tbody id="workerTable"></tbody>
+
+</table>
+
+</div>
+
+</div>
+
+<!-- ASSETS -->
+
+<div id="assetsTab"
+class="card"
+style="display:none">
+
+<div class="topbar">
+
+<h2>Assets</h2>
+
+<div class="button-group">
+
+<button
+class="gender-btn"
+onclick="switchAssetGender('Male')">
+
+Gents
+
+</button>
+
+<button
+class="gender-btn"
+onclick="switchAssetGender('Female')">
+
+Ladies
+
+</button>
+
+<button
+class="gender-btn"
+onclick="switchAssetStatus('Active')">
+
+Active
+
+</button>
+
+<button
+class="gender-btn"
+onclick="switchAssetStatus('Resigned')">
+
+Inactive
+
+</button>
+
+</div>
+
+</div>
+
+<div class="table-wrapper">
+
+<table>
+
+<thead>
+
+<tr>
+
+<th>Sr</th>
+<th>Name</th>
+<th>Status</th>
+<th>Actions</th>
+
+</tr>
+
+</thead>
+
+<tbody id="assetTable"></tbody>
+
+</table>
+
+</div>
+
+</div>
+
+<!-- LOCKERS -->
+
+<div id="lockerTab"
+class="card"
+style="display:none">
+
+<div class="topbar">
+
+<h2>Lockers</h2>
+
+</div>
+
+<div class="locker-controls">
+
+<button
+class="gender-btn"
+onclick="switchLockerGender('Male')">
+
+Gents
+
+</button>
+
+<button
+class="gender-btn"
+onclick="switchLockerGender('Female')">
+
+Ladies
+
+</button>
+
+<button
+class="gender-btn"
+onclick="switchLockerStatus('Active')">
+
+Active
+
+</button>
+
+<button
+class="gender-btn"
+onclick="switchLockerStatus('Resigned')">
+
+Inactive
+
+</button>
+
+<button
+class="gender-btn"
+onclick="switchLockerType('Given')">
+
+Locker Given
+
+</button>
+
+<button
+class="gender-btn"
+onclick="switchLockerType('NotGiven')">
+
+No Locker
+
+</button>
+
+</div>
+
+<div class="table-wrapper">
+
+<table>
+
+<tbody id="lockerTable"></tbody>
+
+</table>
+
+</div>
+
+</div>
+
+<!-- APRON WASH -->
+
+<div id="washTab"
+class="card"
+style="display:none">
+
+<div class="topbar">
+
+<h2>Apron Wash</h2>
+
+<input
+type="date"
+id="washDate"
+onchange="renderWashTable()">
+
+</div>
+
+<div class="table-wrapper">
+
+<table>
+
+<thead>
+
+<tr>
+
+<th>Wash</th>
+<th>Returned</th>
+<th>Worker</th>
+<th>Apron No</th>
+<th>Locker</th>
+
+</tr>
+
+</thead>
+
+<tbody id="washTable"></tbody>
+
+</table>
+
+</div>
+
+<br>
+
+<button
+class="btn"
+onclick="submitWashReport()">
+
+Submit Wash Report
+
+</button>
+
+<div id="washReport"
+style="margin-top:20px;"></div>
+
+</div>
+
+</div>
+
+<!-- NAVIGATION -->
+
+<div class="bottomnav">
+
+<button
+class="active"
+onclick="showTab('dashboardTab',this)">
+
+Dashboard
+
+</button>
+
+<button
+onclick="showTab('assetsTab',this)">
+
+Assets
+
+</button>
+
+<button
+onclick="showTab('lockerTab',this)">
+
+Lockers
+
+</button>
+
+<button
+onclick="showTab('washTab',this)">
+
+Wash
+
+</button>
+
+</div>
+
+<!-- WORKER MODAL -->
+
+<div
+id="workerModal"
+class="modal">
+
+<h3>Add Worker</h3>
+
+<input
+id="empId"
+placeholder="Employee ID">
+
+<input
+id="empName"
+placeholder="Worker Name">
+
+<select id="gender">
+
+<option value="">
+Select Gender
+</option>
+
+<option>Male</option>
+
+<option>Female</option>
+
+</select>
+
+<input
+id="doj"
+placeholder="DOJ DD/MM/YYYY"
+maxlength="10"
+oninput="formatDate(this)">
+
+<input
+id="dob"
+placeholder="DOB DD/MM/YYYY"
+maxlength="10"
+oninput="formatDate(this)">
+
+<button
+class="btn"
+onclick="saveWorker()">
+
+Save Worker
+
+</button>
+
+</div>
+
+<!-- ASSET MODAL -->
+
+<div
+id="assetModal"
+class="modal">
+
+<h3>Assign Assets</h3>
+
+<select id="lockerNo"></select>
+
+<select id="apronColor">
+
+<option value="">
+Apron Color
+</option>
+
+<option>Blue</option>
+<option>White</option>
+<option>Black</option>
+<option>Brown</option>
+
+</select>
+
+<select id="apronType">
+
+<option value="">
+Apron Type
+</option>
+
+<option>Half</option>
+<option>Full</option>
+<option>Pocket</option>
+
+</select>
+
+<select id="apronSize">
+
+<option value="">
+Apron Size
+</option>
+
+<option>M</option>
+<option>L</option>
+<option>XL</option>
+<option>XXL</option>
+
+</select>
+
+<input
+id="apronNo"
+placeholder="Apron Number">
+
+<label>
+
+<input
+type="checkbox"
+id="crocs">
+
+Crocs
+
+</label>
+
+<br><br>
+
+<label>
+
+<input
+type="checkbox"
+id="lockerKey">
+
+Locker Key
+
+</label>
+
+<br><br>
+
+<button
+class="btn"
+onclick="saveAssets()">
+
+Save Assets
+
+</button>
+
+</div>
+
+<!-- SETTINGS -->
+
+<div
+id="settingsModal"
+class="modal">
+
+<h3>Settings</h3>
+
+<p>Total Workers:
+<span id="totalWorkers"></span>
+</p>
+
+<p>Male Workers:
+<span id="maleWorkers"></span>
+</p>
+
+<p>Female Workers:
+<span id="femaleWorkers"></span>
+</p>
+
+<button
+class="btn"
+onclick="closeSettings()">
+
+Close
+
+</button>
+
+</div>
+
+<script src="script.js"></script>
+
+</body>
+
+</html>
